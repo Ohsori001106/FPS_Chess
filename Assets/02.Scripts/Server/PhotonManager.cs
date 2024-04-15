@@ -36,8 +36,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("마스터 서버 접속 성공");
-        Debug.Log($"InLobby?: {PhotonNetwork.InLobby}");
-        PhotonNetwork.JoinLobby(TypedLobby.Default);
+        PhotonNetwork.JoinLobby(); // 마스터 서버에 연결된 후 로비에 자동으로 입장
     }
 
     public override void OnJoinedLobby()
