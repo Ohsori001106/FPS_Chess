@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 using static UnityEngine.UI.GridLayoutGroup;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(Animator))]
+
 public class ChessMoveAbility : ChessAbility
 {
     public bool IsJumping => !_characterController.isGrounded;

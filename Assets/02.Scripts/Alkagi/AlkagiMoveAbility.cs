@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class AlkagiMoveAbility : MonoBehaviour
+public class AlkagiMoveAbility : MonoBehaviourPun
 {
     private Rigidbody rb;
     public float maxPower = 10f;
@@ -10,9 +11,6 @@ public class AlkagiMoveAbility : MonoBehaviour
     private Vector3 endPosition;
     private bool isDragging = false;
     private Camera cam;
-
-    // 충돌 시 반발력을 설정
-    public float bounceForce = 2f;
 
     void Awake()
     {
@@ -22,26 +20,29 @@ public class AlkagiMoveAbility : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (photonView.IsMine)
         {
-            RaycastHit hit;
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit, 100f))
+            if (Input.GetMouseButtonDown(0))
             {
-                if (hit.collider.gameObject == gameObject)
+                RaycastHit hit;
+                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out hit, 100f))
                 {
-                    startPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
-                    isDragging = true;
+                    if (hit.collider.gameObject == gameObject)
+                    {
+                        startPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
+                        isDragging = true;
+                    }
                 }
             }
-        }
 
-        if (Input.GetMouseButtonUp(0) && isDragging)
-        {
-            endPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
-            isDragging = false;
-            Shoot();
+            if (Input.GetMouseButtonUp(0) && isDragging)
+            {
+                endPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
+                isDragging = false;
+                Shoot();
+            }
         }
     }
 
@@ -50,17 +51,24 @@ public class AlkagiMoveAbility : MonoBehaviour
         Vector3 forceDirection = startPosition - endPosition;
         float dragDistance = Vector3.Distance(startPosition, endPosition);
         float appliedPower = Mathf.Min(dragDistance * 3, maxPower);
-
-        rb.AddForce(forceDirection.normalized * appliedPower, ForceMode.Impulse);
+        photonView.RPC(nameof(ApplyForce), RpcTarget.All, forceDirection.normalized * appliedPower);
     }
 
-    // 충돌 처리 함수
-    private void OnCollisionEnter(Collision collision)
+    [PunRPC]
+    void ApplyForce(Vector3 force)
     {
-        if (collision.collider.CompareTag("Player")) // Player 태그와만 반발력 적용
+        rb.AddForce(force, ForceMode.Impulse);
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        PhotonView otherPhotonView = other.gameObject.GetComponent<PhotonView>();
+        if (otherPhotonView != null && !otherPhotonView.IsMine) // 충돌한 오브젝트가 다른 플레이어의 것인지 확인
         {
-            Vector3 bounceDirection = collision.contacts[0].normal;
-            rb.AddForce(bounceDirection * bounceForce, ForceMode.Impulse);
+            if (PhotonNetwork.IsMasterClient) // 마스터 클라이언트만 씬 전환을 수행
+            {
+                PhotonNetwork.LoadLevel("BattleScene"); // 모든 클라이언트에서 "BattleScene" 씬으로 전환
+            }
         }
     }
 }

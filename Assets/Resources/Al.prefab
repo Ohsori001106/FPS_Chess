@@ -16,6 +16,13 @@ GameObject:
   - component: {fileID: 5079617194513768432}
   - component: {fileID: -1061716299460535443}
   - component: {fileID: 6555219011611714858}
+  - component: {fileID: 759844572919224611}
+  - component: {fileID: -362515066180929695}
+  - component: {fileID: 5855891861791716255}
+  - component: {fileID: 3708079411173172866}
+  - component: {fileID: 8550400649602222999}
+  - component: {fileID: 2328576257972682746}
+  - component: {fileID: 5712983695655166442}
   m_Layer: 0
   m_Name: Al
   m_TagString: Player
@@ -149,7 +156,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPower: 10
-  bounceForce: 2
 --- !u!114 &-1061716299460535443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,6 +176,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 6555219011611714858}
+  - {fileID: 759844572919224611}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -189,3 +196,126 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &759844572919224611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858980832898912971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64179f3720bbfe947b7724caa67b7c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 0
+  m_TeleportEnabled: 0
+  m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &-362515066180929695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858980832898912971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b079db0e994f10b429ec3511cf20bb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  bounceForce: 2
+--- !u!114 &5855891861791716255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858980832898912971}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e154d3405a9396542b59be0a059a156b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitEffectPrefab: {fileID: 0}
+  firePoint: {fileID: 0}
+  fireRate: 1
+--- !u!114 &3708079411173172866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858980832898912971}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f08f4e394b895e42a4e28c27b22df2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CameraRoot: {fileID: 0}
+--- !u!143 &8550400649602222999
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858980832898912971}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Height: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2328576257972682746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858980832898912971}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69524844541972c4cbb42b74a3b0c011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5712983695655166442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858980832898912971}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 314f7819654202f44a199f395971f8dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Stat:
+    Damage: 3
+    Health: 15
+    MaxHealth: 15
+    Stamina: 0
+    MaxStamina: 0
+    RunConsumeStamina: 0
+    RecoveryStamina: 0
+    MoveSpeed: 5
+    RunSpeed: 5
+    RotationSpeed: 200
+    AttackCoolTime: 3
+    AttackConsumeStamina: 0
+    JumpPower: 7
+    JumpConsumeStamina: 0
