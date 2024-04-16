@@ -51,6 +51,7 @@ public class AlkagiMoveAbility : MonoBehaviourPun
         Vector3 forceDirection = startPosition - endPosition;
         float dragDistance = Vector3.Distance(startPosition, endPosition);
         float appliedPower = Mathf.Min(dragDistance * 3, maxPower);
+
         photonView.RPC(nameof(ApplyForce), RpcTarget.All, forceDirection.normalized * appliedPower);
     }
 
@@ -60,15 +61,20 @@ public class AlkagiMoveAbility : MonoBehaviourPun
         rb.AddForce(force, ForceMode.Impulse);
     }
 
-    void OnCollisionEnter(Collision other)
+    private void OnCollisionEnter(Collision collision)
     {
-        PhotonView otherPhotonView = other.gameObject.GetComponent<PhotonView>();
-        if (otherPhotonView != null && !otherPhotonView.IsMine) // 충돌한 오브젝트가 다른 플레이어의 것인지 확인
+        if (collision.collider.CompareTag("Player"))
         {
-            if (PhotonNetwork.IsMasterClient) // 마스터 클라이언트만 씬 전환을 수행
+            if (photonView.IsMine)
             {
-                PhotonNetwork.LoadLevel("BattleScene"); // 모든 클라이언트에서 "BattleScene" 씬으로 전환
+                photonView.RPC(nameof(ChangeScene), RpcTarget.All);
             }
         }
+    }
+
+    [PunRPC]
+    public void ChangeScene()
+    {
+        PhotonNetwork.LoadLevel("BattleScene");
     }
 }
