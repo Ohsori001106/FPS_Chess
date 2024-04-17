@@ -1,65 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Photon.Pun;
-using ExitGames.Client.Photon;
+using Photon.Realtime;
+using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public Transform blackSpawnPoint; // Black 팀의 스폰 포인트
-    public Transform whiteSpawnPoint; // White 팀의 스폰 포인트
-
     void Start()
     {
-        InitializePlayer();
-    }
-
-    private void InitializePlayer()
-    {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Team", out object team))
+        if (PhotonNetwork.IsMasterClient)
         {
-            string teamName = team as string;
-            Vector3 spawnPosition = GetSpawnPosition(teamName);
-            string prefabName = teamName == "Black" ? "BlackPawn" : "WhitePawn";
-
-            PhotonNetwork.Instantiate(prefabName, spawnPosition, Quaternion.identity);
-            Debug.Log($"Spawned {teamName} pawn for {PhotonNetwork.LocalPlayer.NickName} at {spawnPosition}");
-        }
-        else
-        {
-            Debug.LogError("Team property is missing for this player.");
+            // 방에 입장 완료된 후 팀을 할당
+            AssignTeams();
         }
     }
 
-    private Vector3 GetSpawnPosition(string teamName)
+    void AssignTeams()
     {
-        // 스폰 위치를 직접적으로 빈 오브젝트에서 참조하여 반환
-        return teamName == "Black" ? blackSpawnPoint.position : whiteSpawnPoint.position;
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        GameObject other = collision.gameObject;
-        if (ShouldTriggerSceneChange(gameObject, other))
+        Player[] players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
         {
-            ChangeScene();
+            Hashtable teamProps = new Hashtable();
+            string teamName = "Team " + (i + 1).ToString(); // 팀 이름을 Team 1, Team 2, Team 3, Team 4로 설정
+            teamProps["Team"] = teamName;
+            players[i].SetCustomProperties(teamProps);
         }
     }
 
-    private bool ShouldTriggerSceneChange(GameObject player, GameObject other)
+    public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        return player.CompareTag("Player") && other.CompareTag("Player") && AreFromDifferentTeams(player, other);
-    }
-
-    private bool AreFromDifferentTeams(GameObject player1, GameObject player2)
-    {
-        var team1 = player1.GetComponent<PhotonView>().Owner.CustomProperties["Team"] as string;
-        var team2 = player2.GetComponent<PhotonView>().Owner.CustomProperties["Team"] as string;
-        return team1 != team2;
-    }
-
-    private void ChangeScene()
-    {
-        PhotonNetwork.LoadLevel("BattleScene");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // 새로운 플레이어가 방에 입장할 때마다 팀을 다시 할당
+            AssignTeams();
+        }
     }
 }

@@ -6,10 +6,11 @@ using Photon.Pun;
 public class AlkagiMoveAbility : MonoBehaviourPun
 {
     private Rigidbody rb;
-    private Camera cam;
-    private Vector3 dragStartPosition;
-    private bool isDragging = false;
     public float maxPower = 10f;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
+    private bool isDragging = false;
+    private Camera cam;
 
     void Awake()
     {
@@ -26,32 +27,38 @@ public class AlkagiMoveAbility : MonoBehaviourPun
                 RaycastHit hit;
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out hit))
+                if (Physics.Raycast(ray, out hit, 100f))
                 {
                     if (hit.collider.gameObject == gameObject)
                     {
+                        startPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
                         isDragging = true;
-                        dragStartPosition = transform.position;
                     }
                 }
             }
 
             if (Input.GetMouseButtonUp(0) && isDragging)
             {
-                Vector3 dragEndPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
-                Vector3 forceDirection = dragStartPosition - dragEndPosition;
-                float dragDistance = Vector3.Distance(dragStartPosition, dragEndPosition);
-                float appliedPower = Mathf.Min(dragDistance * 3, maxPower);
-
-                photonView.RPC(nameof(Shoot), RpcTarget.All, forceDirection.normalized * appliedPower);
+                endPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
                 isDragging = false;
+                Shoot();
             }
         }
     }
 
+    private void Shoot()
+    {
+        Vector3 forceDirection = startPosition - endPosition;
+        float dragDistance = Vector3.Distance(startPosition, endPosition);
+        float appliedPower = Mathf.Min(dragDistance * 3, maxPower);
+
+        photonView.RPC(nameof(ApplyForce), RpcTarget.All, forceDirection.normalized * appliedPower);
+    }
+
     [PunRPC]
-    void Shoot(Vector3 force)
+    void ApplyForce(Vector3 force)
     {
         rb.AddForce(force, ForceMode.Impulse);
     }
+
 }
