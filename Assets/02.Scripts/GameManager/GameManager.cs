@@ -1,37 +1,30 @@
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    void Start()
+    public static GameManager Instance;
+
+    void Awake()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (Instance == null)
         {
-            // 방에 입장 완료된 후 팀을 할당
-            AssignTeams();
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
-    void AssignTeams()
+    public override void OnJoinedRoom()
     {
-        Player[] players = PhotonNetwork.PlayerList;
-        for (int i = 0; i < players.Length; i++)
-        {
-            Hashtable teamProps = new Hashtable();
-            string teamName = "Team " + (i + 1).ToString(); // 팀 이름을 Team 1, Team 2, Team 3, Team 4로 설정
-            teamProps["Team"] = teamName;
-            players[i].SetCustomProperties(teamProps);
-        }
+        base.OnJoinedRoom();
+        Debug.Log("방에 성공적으로 입장하였습니다.");
+        // 방에 입장하면 필요한 초기화나 설정을 수행할 수 있습니다.
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // 새로운 플레이어가 방에 입장할 때마다 팀을 다시 할당
-            AssignTeams();
-        }
-    }
+    // 게임 로직이 필요한 추가적인 메소드들을 이곳에 구현할 수 있습니다.
+    // 예를 들어, 게임 오버 조건 확인, 점수 계산, 게임 재시작 등
 }

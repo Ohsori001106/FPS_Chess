@@ -9,6 +9,7 @@ TagManager:
   - White
   - Gun
   - FxTemporaire
+  - Coin
   layers:
   - Default
   - TransparentFX

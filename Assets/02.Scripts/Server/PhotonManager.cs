@@ -4,65 +4,62 @@ using Photon.Realtime;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
-    public static PhotonManager Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
     private void Start()
     {
-        PhotonNetwork.GameVersion = Application.version;
-        PhotonNetwork.ConnectUsingSettings();
-        PhotonNetwork.SendRate = 50;
-        PhotonNetwork.SerializationRate = 30;
+        ConnectToPhoton();
+    }
+
+    public void ConnectToPhoton()
+    {
+        PhotonNetwork.ConnectUsingSettings(); // 설정에 따라 Photon 서버에 연결
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("마스터 서버 접속 성공");
-        PhotonNetwork.JoinLobby(TypedLobby.Default);
+        Debug.Log("Connected to Master Server");
+        PhotonNetwork.JoinLobby(); // 기본 로비에 입장
     }
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("로비에 입장했습니다.");
-        CreateOrJoinRoom();
+        Debug.Log("Joined Lobby");
+        JoinRandomOrCreateTimeStampedRoom();
     }
-    void CreateOrJoinRoom()
+
+    void JoinRandomOrCreateTimeStampedRoom()
     {
-        string roomName = "MyRoom";
+        // 랜덤 방 참여 시도
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log("No available rooms, creating a new room");
+        CreateTimeStampedRoom();
+    }
+
+    void CreateTimeStampedRoom()
+    {
+        string roomName = "MyRoom_" + System.DateTime.Now.Ticks.ToString(); // 고유한 방 이름 생성
         RoomOptions roomOptions = new RoomOptions
         {
             IsVisible = true,
             IsOpen = true,
-            MaxPlayers = 4 // 최대 플레이어 수 설정
+            MaxPlayers = 4 // 최대 플레이어 수
         };
-        // 방 생성 시도
+
+        // 고유한 방 이름을 사용하여 방 생성 시도
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
-    public override void OnJoinedRoom()
+
+    public override void OnCreatedRoom()
     {
-        Debug.Log("방 입장 성공!");
-        Debug.Log($"RoomName: {PhotonNetwork.CurrentRoom.Name}");
-        int playerIndex = PhotonNetwork.CurrentRoom.PlayerCount;
-        string playerName = $"Player_{playerIndex}";
-        PhotonNetwork.NickName = playerName;
-        Debug.Log($"PlayerCount: {PhotonNetwork.CurrentRoom.PlayerCount}");
-        Debug.Log($"NickName: {PhotonNetwork.NickName}");
-        Debug.Log($"PlayerIndex: {playerIndex}");
+        Debug.Log($"Room created successfully: {PhotonNetwork.CurrentRoom.Name}");
     }
 
-    public override void OnCreateRoomFailed(short returnCode, string message)
+    public override void OnJoinedRoom()
     {
-        Debug.Log($"방 생성 실패! 오류 코드: {returnCode}, 메시지: {message}");
+        Debug.Log($"Joined Room Successfully: {PhotonNetwork.CurrentRoom.Name}");
     }
 
 }
