@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
@@ -31,16 +29,20 @@ public class AlkagiMoveAbility : MonoBehaviourPun
                 {
                     if (hit.collider.gameObject == gameObject)
                     {
-                        startPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
+                        float distanceToScreen = Vector3.Distance(transform.position, cam.transform.position);
+                        startPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceToScreen));
                         isDragging = true;
+                        Debug.Log("Start Position: " + startPosition);
                     }
                 }
             }
 
             if (Input.GetMouseButtonUp(0) && isDragging)
             {
-                endPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.y));
+                float distanceToScreen = Vector3.Distance(transform.position, cam.transform.position);
+                endPosition = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceToScreen));
                 isDragging = false;
+                Debug.Log("End Position: " + endPosition);
                 Shoot();
             }
         }
@@ -51,6 +53,7 @@ public class AlkagiMoveAbility : MonoBehaviourPun
         Vector3 forceDirection = startPosition - endPosition;
         float dragDistance = Vector3.Distance(startPosition, endPosition);
         float appliedPower = Mathf.Min(dragDistance * 3, maxPower);
+        Debug.Log("Force Direction: " + forceDirection + ", Power: " + appliedPower);
 
         photonView.RPC(nameof(ApplyForce), RpcTarget.All, forceDirection.normalized * appliedPower);
     }
@@ -60,5 +63,4 @@ public class AlkagiMoveAbility : MonoBehaviourPun
     {
         rb.AddForce(force, ForceMode.Impulse);
     }
-
 }

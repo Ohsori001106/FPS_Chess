@@ -1,47 +1,53 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RenderLine : MonoBehaviour
 {
-    bool dragging = false; // 드래그 상태를 추적하는 변수
-    LineRenderer lineRenderer; // 선을 그리기 위한 LineRenderer 컴포넌트의 참조
+    LineRenderer lineRenderer;
+    bool dragging = false;
+    public float maxLength = 10f; // 선의 최대 길이 설정
 
     void Start()
     {
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.startColor = Color.red; // 선의 시작 색상
-        lineRenderer.endColor = Color.yellow; // 선의 끝 색상
-        lineRenderer.startWidth = 0.5f; // 선의 시작 너비
-        lineRenderer.endWidth = 0.5f; // 선의 끝 너비
-        lineRenderer.positionCount = 2; // 선을 구성할 점의 수
-        lineRenderer.useWorldSpace = true; // 월드 좌표계 사용 설정
+        lineRenderer.startColor = Color.red;
+        lineRenderer.endColor = Color.yellow;
+        lineRenderer.startWidth = 0.1f;
+        lineRenderer.endWidth = 0.1f;
+        lineRenderer.positionCount = 4; // 두 개의 선을 위해 포인트 개수를 4로 설정
+        lineRenderer.useWorldSpace = true;
     }
 
     void Update()
     {
         if (dragging)
         {
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f)); // Z-축은 오브젝트와 카메라 거리 고려
-            mousePosition.z = transform.position.z; // Z-축 설정
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.WorldToScreenPoint(transform.position).z));
+            mousePosition.y = transform.position.y; // Y축 고정
 
             Vector3 direction = mousePosition - transform.position; // 방향 벡터 계산
-            Vector3 normalizedDirection = direction.normalized; // 정규화된 방향 벡터
+            direction.y = 0; // Y 축 변화 무시
 
-            lineRenderer.SetPosition(0, transform.position - normalizedDirection * 2); // 방향의 반대쪽으로 선을 확장
-            lineRenderer.SetPosition(1, transform.position + normalizedDirection * 2); // 마우스 방향으로 선을 확장
+            // 방향을 정규화하고 최대 길이로 제한
+            Vector3 lineEndPosition = transform.position + direction.normalized * Mathf.Min(direction.magnitude, maxLength);
+            Vector3 oppositeLineEndPosition = transform.position - direction.normalized * Mathf.Min(direction.magnitude, maxLength);
+
+            lineRenderer.SetPosition(0, oppositeLineEndPosition); // 반대 방향 끝점
+            lineRenderer.SetPosition(1, transform.position); // 중앙점
+            lineRenderer.SetPosition(2, transform.position); // 중앙점
+            lineRenderer.SetPosition(3, lineEndPosition); // 마우스 방향 끝점
         }
     }
 
     void OnMouseDown()
     {
         dragging = true;
-        lineRenderer.enabled = true; // 라인 렌더러 활성화
+        lineRenderer.enabled = true;
     }
 
     void OnMouseUp()
     {
         dragging = false;
-        lineRenderer.enabled = false; // 드래그가 끝나면 라인 렌더러 비활성화
+        lineRenderer.enabled = false;
     }
 }
