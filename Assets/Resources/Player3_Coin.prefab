@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 747174632795221347}
   - component: {fileID: 3142568883615398876}
   - component: {fileID: 2290727815541551200}
+  - component: {fileID: -661037018401099371}
   - component: {fileID: 8397537428824278810}
   - component: {fileID: 7241729662313611485}
   - component: {fileID: 6191448148466063993}
@@ -165,6 +166,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLength: 5
+--- !u!114 &-661037018401099371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8719546591256070317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1831966fb1970284a9f6f1e627cecba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedSlider: {fileID: 0}
+  additionalSlider: {fileID: 0}
 --- !u!114 &8397537428824278810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +199,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: -661037018401099371}
   - {fileID: 7241729662313611485}
   - {fileID: 6191448148466063993}
   sceneViewId: 0

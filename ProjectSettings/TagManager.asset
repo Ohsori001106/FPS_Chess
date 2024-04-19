@@ -10,6 +10,8 @@ TagManager:
   - Gun
   - FxTemporaire
   - Coin
+  - Slider1
+  - Slider2
   layers:
   - Default
   - TransparentFX

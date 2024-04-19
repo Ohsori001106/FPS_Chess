@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class GameraManager : MonoBehaviourPunCallbacks
+public class CameraManager : MonoBehaviourPunCallbacks
 {
     public Camera[] cameras; // 인스펙터에서 할당할 카메라 배열
 

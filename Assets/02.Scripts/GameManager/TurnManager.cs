@@ -40,6 +40,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     public void LateUpdate()
     {
         players = PhotonNetwork.PlayerList;
+        
 
     }
     void UpdateTurn()
@@ -47,7 +48,30 @@ public class TurnManager : MonoBehaviourPunCallbacks
         currentPlayerIndex = (currentPlayerIndex + 1)%(players.Length );
         photonView.RPC("SetCurrentPlayerIndex", RpcTarget.All, currentPlayerIndex);
     }
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        players = PhotonNetwork.PlayerList; // 플레이어 목록 업데이트
+        Debug.Log("Player left: " + otherPlayer.NickName);
 
+        if (players.Length == 0)
+        {
+            currentPlayerIndex = -1; // 플레이어가 없을 경우
+            return;
+        }
+
+        // 플레이어가 나갔을 때 현재 플레이어 인덱스 조정
+        if (currentPlayerIndex >= players.Length)
+        {
+            currentPlayerIndex = 0;
+        }
+
+        // 마스터 클라이언트가 남아있는 경우 턴 업데이트
+        if (PhotonNetwork.IsMasterClient)
+        {
+            UpdateTurn();
+        }
+    }
 
     [PunRPC]
     public void SetCurrentPlayerIndex(int index)
@@ -76,7 +100,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     {
         if (players == null)
         {
-            Debug.LogError("Players array is not initialized!");
+           
             return false;
         }
 

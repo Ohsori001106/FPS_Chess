@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3755634528947661432}
   - component: {fileID: 737514214915505175}
   - component: {fileID: 2090924942841418458}
+  - component: {fileID: 4793656374797617329}
   - component: {fileID: 3255057276325674670}
   m_Layer: 0
   m_Name: Player1_Coin
@@ -167,6 +168,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 6659784192112178409}
   - {fileID: 737514214915505175}
+  - {fileID: 4793656374797617329}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -199,6 +201,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLength: 5
+--- !u!114 &4793656374797617329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5505726820124786968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1831966fb1970284a9f6f1e627cecba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedSlider: {fileID: 0}
+  additionalSlider: {fileID: 0}
 --- !u!64 &3255057276325674670
 MeshCollider:
   m_ObjectHideFlags: 0

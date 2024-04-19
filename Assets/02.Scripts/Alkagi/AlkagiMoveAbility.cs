@@ -70,6 +70,6 @@ public class AlkagiMoveAbility : MonoBehaviourPun
     void ApplyForce(Vector3 force)
     {
         rb.AddForce(force, ForceMode.Impulse);
-        
+
     }
 }

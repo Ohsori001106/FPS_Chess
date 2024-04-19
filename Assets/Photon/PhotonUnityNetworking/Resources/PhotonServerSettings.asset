@@ -52,6 +52,11 @@ MonoBehaviour:
   - UpdateCurrentPlayerIndex
   - SetPlayerIndex
   - RequestTurnEnd
+  - AdjustSliderValue
+  - ApplyCollisionForce
+  - <Awake>g__ApplyForce|7_4
+  - HandleCoinCollision
+  - SyncSliderValue
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

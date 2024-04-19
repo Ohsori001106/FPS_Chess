@@ -20,7 +20,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby(); // 기본 로비에 입장
     }
 
-    public override void OnJoinedLobby()
+/*    public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
         JoinRandomOrCreateTimeStampedRoom();
@@ -28,29 +28,27 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     void JoinRandomOrCreateTimeStampedRoom()
     {
-        // 랜덤 방 참여 시도
         PhotonNetwork.JoinRandomRoom();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log("No available rooms, creating a new room");
-        CreateTimeStampedRoom();
-    }
+        *//*CreateTimeStampedRoom();*//*
+    }*/
 
-    void CreateTimeStampedRoom()
+    /*void CreateTimeStampedRoom()
     {
-        string roomName = "MyRoom_" + System.DateTime.Now.Ticks.ToString(); // 고유한 방 이름 생성
+        string roomName = "MyRoom_" + System.DateTime.Now.Ticks.ToString();
         RoomOptions roomOptions = new RoomOptions
         {
             IsVisible = true,
             IsOpen = true,
-            MaxPlayers = 4 // 최대 플레이어 수
+            MaxPlayers = 4
         };
 
-        // 고유한 방 이름을 사용하여 방 생성 시도
         PhotonNetwork.CreateRoom(roomName, roomOptions);
-    }
+    }*/
 
     public override void OnCreatedRoom()
     {
@@ -60,6 +58,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log($"Joined Room Successfully: {PhotonNetwork.CurrentRoom.Name}");
+        PhotonNetwork.LoadLevel("MainScene");
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"{otherPlayer.NickName} has left the room.");
+        // 여기서 필요한 추가적인 로직을 구현할 수 있습니다.
+        // 예: 남은 플레이어 수 확인, 게임 상태 업데이트, 리더보드 업데이트 등
+    }
 }

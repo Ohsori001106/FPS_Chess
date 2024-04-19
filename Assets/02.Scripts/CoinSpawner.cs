@@ -7,7 +7,7 @@ public class CoinSpawner : MonoBehaviourPunCallbacks
     public SpawnerType spawnerType;
     public Transform spawnPosition;
 
-    public override void OnJoinedRoom() // 방에 성공적으로 입장했을 때 코인 생성
+    public void Start() // 방에 성공적으로 입장했을 때 코인 생성
     {
         SpawnPlayerCoin();
     }
